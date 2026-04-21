@@ -194,7 +194,7 @@ Use Postman or any API client:
 
 ```bash
 # Clone repo
-git clone <your-repo-url>
+git clone https://github.com/vaibhv19/Auth-service
 
 # Navigate
 cd auth-service
