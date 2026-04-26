@@ -1,222 +1,140 @@
-# 🔐 Auth Service (Spring Boot Microservice)
+# 🔐 Auth Service
 
-A production-level **Authentication & Authorization Service** built using Spring Boot, implementing **JWT-based authentication**, **Refresh Tokens**, and **Role-Based Access Control (RBAC)**.
+A centralized **Authentication & Authorization microservice** built with **Spring Boot** and **Spring Security** that handles secure user signup, login, JWT token generation, refresh token management, and role-based access control.
 
 ---
 
 ## 🚀 Overview
 
-This service acts as a centralized **Auth microservice** responsible for:
+This project is designed to simulate a production-style auth system used in modern backend applications and microservice architectures.
 
-* User Signup & Login
-* JWT Access Token generation
-* Refresh Token management
-* Secure password storage
-* Role-based authorization
+It provides:
 
-It is designed to integrate with API Gateway and other microservices.
-
----
-
-## 🧠 Architecture
-
-* Stateless authentication using JWT
-* Refresh tokens stored in database
-* Spring Security filter-based request validation
-* Scalable microservice design
+* Secure user registration and login
+* JWT-based stateless authentication
+* Refresh token mechanism for persistent sessions
+* Role-Based Access Control (RBAC)
+* Protected API endpoints using Spring Security
 
 ---
 
-## 🗂️ Database Design
+## 🛠️ Tech Stack
 
-### Tables:
-
-* **users** → stores user credentials
-* **roles** → defines roles (ADMIN, USER)
-* **users_roles** → mapping table (Many-to-Many)
-* **tokens** → stores refresh tokens
-
----
-
-## ⚙️ Tech Stack
-
-* Java 17+
+* Java
 * Spring Boot
 * Spring Security
-* JWT (JSON Web Token)
-* MySQL / PostgreSQL
+* Spring Data JPA / Hibernate
+* MySQL
 * Maven / Gradle
+* Postman
+* Git & GitHub
 
 ---
 
-## 🔑 Features
+## ✨ Features
 
-### ✅ Authentication
-
-* User Signup
-* User Login
+* User Signup API
+* User Login API
+* JWT Access Token generation
+* Refresh Token flow
 * Password encryption using BCrypt
-
-### 🔐 Authorization
-
-* Role-based access control (RBAC)
-
-### 🔁 Token Management
-
-* Access Token (short-lived)
-* Refresh Token (long-lived)
-* Token validation & regeneration
-
-### ⚡ Security
-
-* JWT Filter for request validation
-* Secure endpoints using Spring Security
+* Role-based authorization (USER / ADMIN)
+* Custom JWT filter for request validation
+* Protected endpoints with Spring Security
 
 ---
 
-## 📡 API Endpoints
+## 🏗️ Architecture
 
-### 🧾 Auth APIs
+The project follows a **layered architecture** with clean separation of concerns:
 
-| Method | Endpoint                | Description                    |
-| ------ | ----------------------- | ------------------------------ |
-| POST   | `/auth/v1/signup`       | Register a new user            |
-| POST   | `/auth/v1/login`        | Authenticate user & get tokens |
-| POST   | `/auth/v1/refreshToken` | Generate new access token      |
-| GET    | `/ping`                 | Health check                   |
-
----
-
-## 🔄 Flow
-
-### 🔐 Login Flow
-
-1. User sends credentials
-2. AuthenticationManager validates
-3. Access + Refresh tokens generated
-4. Tokens returned to client
-
----
-
-### 🔁 Refresh Token Flow
-
-1. Client sends refresh token
-2. Server validates from DB
-3. New access token issued
-
----
-
-### 🔍 Request Flow
-
-1. Client sends JWT in header
-2. JWTFilter intercepts request
-3. Token validated
-4. Request forwarded to controller
-
----
-
-## 📁 Project Structure
-
+```id="k8xv31"
+src/main/java/authservice
+│── controller
+│── service
+│── repository
+│── entities
+│── request
+│── response
+│── auth
+│── utils
 ```
-auth-service/
-│── controller/
-│   └── AuthController.java
-│
-│── service/
-│   ├── JwtService.java
-│   ├── RefreshTokenService.java
-│   └── UserDetailsServiceImpl.java
-│
-│── config/
-│   └── SecurityConfig.java
-│
-│── filter/
-│   └── JwtFilter.java
-│
-│── entity/
-│   ├── User.java
-│   ├── Role.java
-│   └── Token.java
-│
-│── repository/
-│
-│── dto/
-│
-│── application.yml
-```
+
+This structure improves maintainability, scalability, and code organization.
 
 ---
 
 ## 🔐 Security Implementation
 
-* Password hashing using BCrypt
-* Stateless JWT authentication
-* Refresh token validation via DB
-* Secure endpoints via Spring Security
+* BCrypt password hashing for secure credential storage
+* JWT token validation on every protected request
+* Refresh token verification with expiry checks
+* Role-based access permissions
+* Stateless authentication flow
 
 ---
 
-## ⚡ Non-Functional Requirements
+## 📡 API Endpoints
 
-* Fast authentication (minimal DB calls)
-* Scalable microservice design
-* Fault-tolerant token handling
+| Method | Endpoint                | Description                           |
+| ------ | ----------------------- | ------------------------------------- |
+| POST   | `/auth/v1/signup`       | Register a new user                   |
+| POST   | `/auth/v1/login`        | Authenticate user and generate tokens |
+| POST   | `/auth/v1/refreshToken` | Generate new access token             |
+| GET    | `/ping`                 | Health check                          |
 
 ---
 
-## 🧪 Testing
+## 🔄 Authentication Flow
 
-Use Postman or any API client:
+### Login
 
-1. Signup a user
-2. Login to get tokens
-3. Use access token in headers:
+1. User submits credentials
+2. Credentials validated using Spring Security
+3. JWT Access Token + Refresh Token generated
+4. Tokens returned to client
 
-   ```
-   Authorization: Bearer <access_token>
-   ```
-4. Refresh token when access token expires
+### Token Refresh
+
+1. Client sends refresh token
+2. Token validated from database
+3. New access token generated
+
+---
+
+## ⚡ Key Learnings
+
+* Spring Security configuration
+* JWT authentication flow
+* Secure password handling
+* REST API design
+* Stateless backend security systems
+* Microservice-ready architecture
 
 ---
 
 ## 🚀 Future Improvements
 
-* 🔥 Logout (token revocation)
-* 🔥 Rate limiting (prevent brute force attacks)
-* 🔥 Redis for token storage
-* 🔥 Email verification
-* 🔥 API Gateway integration
-* 🔥 OAuth2 / Keycloak integration
+* Logout with token revocation
+* Redis token storage
+* Rate limiting
+* Docker deployment
+* API Gateway integration
+* OAuth2 / Keycloak support
 
 ---
 
-## 📌 How to Run
+## ▶️ Run Locally
 
-```bash
-# Clone repo
-git clone https://github.com/vaibhv19/Auth-service
-
-# Navigate
-cd auth-service
-
-# Run project
+```bash id="vq1y72"
+git clone https://github.com/vaibhv19/Auth-service.git
+cd Auth-service
 ./mvnw spring-boot:run
 ```
 
 ---
 
-## 🤝 Contribution
-
-Contributions are welcome! Feel free to open issues or submit PRs.
-
----
-
-## 📜 License
-
-This project is open-source and available under the MIT License.
-
----
-
-## 💡 Author
+## 👨‍💻 Author
 Vaibhav Gupta
-Built as part of a **microservices + backend engineering learning journey**.
+
+Developed as part of backend engineering and microservices learning journey.
