@@ -1,140 +1,123 @@
-# 🔐 Auth Service
+# Auth Service
 
-A centralized **Authentication & Authorization microservice** built with **Spring Boot** and **Spring Security** that handles secure user signup, login, JWT token generation, refresh token management, and role-based access control.
+A Spring Boot-based authentication service that provides user signup, login, JWT token generation, refresh-token handling, and stateless security using Spring Security.
 
----
+## Overview
 
-## 🚀 Overview
+This project is a backend authentication starter built with:
 
-This project is designed to simulate a production-style auth system used in modern backend applications and microservice architectures.
+- Java 21
+- Spring Boot 3.2
+- Spring Security
+- Spring Data JPA
+- MySQL
+- JWT (JSON Web Tokens)
+- Gradle
 
-It provides:
+It is designed as a simple but practical auth service for learning, prototyping, or building on top of a microservice-style architecture.
 
-* Secure user registration and login
-* JWT-based stateless authentication
-* Refresh token mechanism for persistent sessions
-* Role-Based Access Control (RBAC)
-* Protected API endpoints using Spring Security
+## What This Service Does
 
----
+The current implementation supports:
 
-## 🛠️ Tech Stack
+- User registration through the signup endpoint
+- User authentication through login
+- JWT access-token generation
+- Refresh-token creation and validation
+- Password hashing with BCrypt
+- Stateless request authentication using a custom JWT filter
 
-* Java
-* Spring Boot
-* Spring Security
-* Spring Data JPA / Hibernate
-* MySQL
-* Maven / Gradle
-* Postman
-* Git & GitHub
+## Project Structure
 
----
-
-## ✨ Features
-
-* User Signup API
-* User Login API
-* JWT Access Token generation
-* Refresh Token flow
-* Password encryption using BCrypt
-* Role-based authorization (USER / ADMIN)
-* Custom JWT filter for request validation
-* Protected endpoints with Spring Security
-
----
-
-## 🏗️ Architecture
-
-The project follows a **layered architecture** with clean separation of concerns:
-
-```id="k8xv31"
-src/main/java/authservice
-│── controller
-│── service
-│── repository
-│── entities
-│── request
-│── response
-│── auth
-│── utils
+```text
+app/
+├── src/
+│   ├── main/
+│   │   ├── java/authservice/
+│   │   │   ├── auth/            # Security, JWT filter, password config
+│   │   │   ├── controller/      # Auth and token endpoints
+│   │   │   ├── entities/        # User, role, refresh-token models
+│   │   │   ├── model/           # DTOs for user input/output
+│   │   │   ├── repository/      # Data access interfaces
+│   │   │   ├── request/         # Request payload classes
+│   │   │   ├── response/        # Response payload classes
+│   │   │   └── service/         # JWT, refresh token, user details logic
+│   │   └── resources/          # Application resources
+│   └── test/
+├── build.gradle
+└── gradlew
 ```
 
-This structure improves maintainability, scalability, and code organization.
+## Main Endpoints
 
----
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| POST | /auth/v1/signup | Registers a new user and returns tokens |
+| POST | /auth/v1/login | Authenticates a user and returns tokens |
+| POST | /auth/v1/refreshToken | Validates a refresh token and issues a new access token |
 
-## 🔐 Security Implementation
+## Authentication Flow
 
-* BCrypt password hashing for secure credential storage
-* JWT token validation on every protected request
-* Refresh token verification with expiry checks
-* Role-based access permissions
-* Stateless authentication flow
+1. A client sends credentials to the login endpoint.
+2. Spring Security validates the user.
+3. The service creates a refresh token and issues a JWT access token.
+4. The client sends the JWT in the Authorization header for protected requests.
+5. The custom JWT filter validates the token before the request continues.
 
----
+## Prerequisites
 
-## 📡 API Endpoints
+Before running the project, make sure you have:
 
-| Method | Endpoint                | Description                           |
-| ------ | ----------------------- | ------------------------------------- |
-| POST   | `/auth/v1/signup`       | Register a new user                   |
-| POST   | `/auth/v1/login`        | Authenticate user and generate tokens |
-| POST   | `/auth/v1/refreshToken` | Generate new access token             |
-| GET    | `/ping`                 | Health check                          |
+- Java 21 installed
+- Gradle or the included Gradle wrapper
+- A MySQL database running
 
----
+## Configuration
 
-## 🔄 Authentication Flow
+This project uses Spring Data JPA and expects a database configuration to be present in the application properties file.
 
-### Login
+Create an application configuration file such as:
 
-1. User submits credentials
-2. Credentials validated using Spring Security
-3. JWT Access Token + Refresh Token generated
-4. Tokens returned to client
-
-### Token Refresh
-
-1. Client sends refresh token
-2. Token validated from database
-3. New access token generated
-
----
-
-## ⚡ Key Learnings
-
-* Spring Security configuration
-* JWT authentication flow
-* Secure password handling
-* REST API design
-* Stateless backend security systems
-* Microservice-ready architecture
-
----
-
-## 🚀 Future Improvements
-
-* Logout with token revocation
-* Redis token storage
-* Rate limiting
-* Docker deployment
-* API Gateway integration
-* OAuth2 / Keycloak support
-
----
-
-## ▶️ Run Locally
-
-```bash id="vq1y72"
-git clone https://github.com/vaibhv19/Auth-service.git
-cd Auth-service
-./mvnw spring-boot:run
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/auth_service
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
 ```
 
----
+Place it in:
 
-## 👨‍💻 Author
+```text
+app/src/main/resources/application.properties
+```
+
+## Running the Application
+
+From the project root:
+
+```bash
+./gradlew :app:bootRun
+```
+
+Or, if you are using Windows:
+
+```powershell
+gradlew.bat :app:bootRun
+```
+
+## Building the Project
+
+```bash
+./gradlew :app:build
+```
+
+## Notes
+
+- The project contains domain models for roles, although the current signup flow creates users without assigning explicit roles.
+- The JWT secret is currently hardcoded in the JWT service class. For production use, this should be moved to environment variables or a secure configuration source.
+- This service is a solid foundation for extending into a more complete identity platform with logout, password reset, email verification, and role-based authorization rules.
+
+## Author
+
 Vaibhav Gupta
-
-Developed as part of backend engineering and microservices learning journey.
